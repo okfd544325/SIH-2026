@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prescription — MediSwift</title>
+  <meta name="description" content="Upload your prescription, let AI verify it, and order medicines from nearby pharmacies — delivered in minutes." />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/mediswift-ui.css" />
+  <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+</head>
+<body data-page="prescription">
+
+<!-- ==================== NAVBAR ==================== -->
+<header id="navbar" class="navbar">
+  <nav class="nav-container">
+    <a href="#hero" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+          <path d="M12 2a3 3 0 0 0-3 3v1H7a3 3 0 0 0 0 6h2v2H7a3 3 0 0 0 0 6h2v1a3 3 0 0 0 6 0v-1h2a3 3 0 0 0 0-6h-2v-2h2a3 3 0 0 0 0-6h-2V5a3 3 0 0 0-3-3Z" fill="currentColor" opacity="0.95"/>
+          <rect x="9.5" y="10.5" width="5" height="3" rx="1.5" fill="#16A34A"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-name">MediSwift</span>
+        <span class="logo-sub">Nanded • 15-min delivery</span>
+      </div>
+    </a>
+
+    <div class="nav-search-wrap">
+      <div class="nav-search">
+        <svg class="nav-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="Search medicines, doctors or symptoms..." />
+      </div>
+      <div class="nav-search-dropdown" id="navSearchDropdown"></div>
+    </div>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#doctors" class="nav-link">Doctors</a>
+      <a href="#assistant" class="nav-link">AI Assistant</a>
+    </div>
+
+    <div class="nav-right">
+      <div class="nav-location">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Nanded, MH
+      </div>
+
+      <a href="#cart" class="nav-cart-btn" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+      </a>
+
+      <div class="nav-auth" id="navAuth">
+        <a href="#login" class="btn btn-ghost" id="loginBtn">Login</a>
+        <a href="#register" class="btn btn-primary" id="registerBtn">Get Started</a>
+      </div>
+      <div class="nav-user" id="navUser">
+        <button class="user-avatar-btn" id="userAvatarBtn">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown-header">
+            <p class="user-dropdown-name" id="userName">User</p>
+            <p class="user-dropdown-email" id="userEmail">user@email.com</p>
+          </div>
+          <a href="#" class="user-dropdown-item" id="myProfileBtn">My Profile</a>
+          <a href="#upload" class="user-dropdown-item">Upload Prescription</a>
+          <a href="#" class="user-dropdown-item" id="logoutBtn">Logout</a>
+        </div>
+      </div>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="menuIcon"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-search">
+      <div class="nav-search">
+        <svg class="nav-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="mobileSearchInput" class="nav-search-input" placeholder="Search medicines, doctors or symptoms..." />
+      </div>
+    </div>
+    <a href="#doctors" class="mobile-menu-link">Consult Doctor</a>
+    <a href="#assistant" class="mobile-menu-link">AI Assistant</a>
+    <a href="#upload" class="mobile-menu-link">Upload Prescription</a>
+    <a href="#store" class="mobile-menu-link">Medicine Store</a>
+    <div class="mobile-menu-divider"></div>
+    <a href="#login" class="btn btn-secondary mobile-menu-btn-full" id="mobileLoginBtn">Login</a>
+    <a href="#register" class="btn btn-primary mobile-menu-btn-full" id="mobileRegisterBtn">Get Started</a>
+  </div>
+</header>
+
+<main>
+
+<!-- ==================== HERO SECTION ==================== -->
+<section id="hero" class="hero-section">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-blob hero-blob-left"></div>
+  <div class="hero-blob hero-blob-right"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content reveal">
+        <div class="hero-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+          Now live in Nanded, Maharashtra
+        </div>
+        <h1 class="hero-title">AI-Powered Medicine Delivery for <span class="gradient-text">Nanded</span></h1>
+        <p class="hero-desc">Upload your doctor's prescription, let AI verify it, and order medicines from nearby pharmacies — delivered in minutes.</p>
+        <div class="hero-actions">
+          <a href="#upload" class="btn btn-primary btn-lg hero-btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Prescription
+          </a>
+          <a href="#doctors" class="btn btn-secondary btn-lg hero-btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .2.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
+            Book Consultation
+          </a>
+          <a href="#assistant" class="btn btn-ghost btn-lg hero-btn-ai">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+            Ask AI
+          </a>
+        </div>
+        <div class="hero-trust">
+          <span class="hero-trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            No signup needed to browse
+          </span>
+          <span class="hero-trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            15-min delivery
+          </span>
+        </div>
+      </div>
+
+      <div class="hero-image-wrap reveal" style="transition-delay:0.15s;">
+        <div class="hero-image-glow"></div>
+        <div class="hero-image-card">
+          <img src="https://images.pexels.com/photos/8657359/pexels-photo-8657359.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Pharmacist handing medicine to a customer" class="hero-image" />
+          <div class="hero-image-overlay">
+            <div class="hero-verified-card glass">
+              <div class="hero-verified-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div>
+                <p class="hero-verified-title">Prescription Verified</p>
+                <p class="hero-verified-sub">AI confidence: 98% • Dr. Anil Sharma</p>
+              </div>
+              <div class="hero-verified-eta">
+                <p class="hero-verified-eta-label">Delivery in</p>
+                <p class="hero-verified-eta-value">30 min</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-floating-card hero-ai-badge">
+          <div class="hero-floating-icon hero-ai-badge-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+          </div>
+          <div>
+            <p class="hero-floating-title">AI Verified</p>
+            <p class="hero-floating-sub">98% Confidence</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TRUST STRIP ==================== -->
+<section id="trustStrip" class="trust-strip-section">
+  <div class="container">
+    <div class="trust-strip-grid" id="trustStripGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== QUICK ACTIONS ==================== -->
+<section id="quickActions" class="quick-actions-section">
+  <div class="container">
+    <div class="quick-actions-grid" id="quickActionsGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== FEATURES ==================== -->
+<section id="features" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Everything you need for your medicines</h2>
+      <p class="section-desc">A complete healthcare experience powered by AI — from prescription to delivery.</p>
+    </div>
+    <div class="features-grid" id="featuresGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section id="howItWorks" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-desc">Four simple steps from prescription to your doorstep.</p>
+    </div>
+    <div class="steps-grid" id="stepsGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== STATS ==================== -->
+<section id="stats" class="section">
+  <div class="container">
+    <div class="stats-card reveal">
+      <div class="stats-grid" id="statsGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== NEARBY PHARMACIES ==================== -->
+<section id="pharmacies" class="section">
+  <div class="container">
+    <div class="section-header-row reveal">
+      <div>
+        <h2 class="section-title">Nearby pharmacies</h2>
+        <p class="section-desc">Verified partner pharmacies near you in Nanded.</p>
+      </div>
+      <a href="#store" class="btn btn-ghost text-brand">Browse store
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="pharmacies-grid" id="pharmaciesGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== UPLOAD PRESCRIPTION ==================== -->
+<section id="upload" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Upload Prescription</h2>
+      <p class="section-desc">Upload your doctor's prescription and let our AI verify it instantly.</p>
+    </div>
+    <div class="upload-wrap">
+      <div class="upload-error" id="uploadError" style="display:none;"></div>
+      <div id="uploadDropzone">
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" style="display:none;" />
+          <div class="dropzone-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <h3 class="dropzone-title" id="dropzoneTitle">Drag & drop your prescription</h3>
+          <p class="dropzone-sub">or click to browse from your device</p>
+          <div class="dropzone-badges">
+            <span class="badge badge-gray">JPG</span>
+            <span class="badge badge-gray">PNG</span>
+            <span class="badge badge-gray">PDF</span>
+            <span class="badge badge-gray">Max 10MB</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="uploadProgress" style="display:none;">
+        <div class="upload-progress-card">
+          <div class="upload-progress-icon spin-slow">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+          </div>
+          <h3 class="upload-progress-title">Uploading & scanning...</h3>
+          <p class="upload-progress-sub">AI is reading your prescription</p>
+          <div class="progress-bar"><div class="progress-bar-fill" id="uploadProgressBar"></div></div>
+        </div>
+      </div>
+
+      <div class="upload-info-grid">
+        <div class="card upload-info-card">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <p class="upload-info-title">Secure & Private</p>
+          <p class="upload-info-desc">Your prescription is encrypted and never shared.</p>
+        </div>
+        <div class="card upload-info-card">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+          <p class="upload-info-title">AI-Powered</p>
+          <p class="upload-info-desc">98% accuracy in medicine extraction.</p>
+        </div>
+        <div class="card upload-info-card">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <p class="upload-info-title">Instant Verification</p>
+          <p class="upload-info-desc">Doctor credentials checked automatically.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 
+
+<!-- ==================== AI ANALYSIS ==================== -->
+<section id="aiAnalysis" class="section" style="display:none;">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">AI Prescription Analysis</h2>
+      <p class="section-desc">Our AI is analyzing your prescription in real-time.</p>
+    </div>
+    <div class="analysis-wrap" id="analysisWrap">
+      <div class="card analysis-file-card" id="analysisFileCard" style="display:none;">
+        <div class="analysis-file-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="analysis-file-info">
+          <p class="analysis-file-name" id="analysisFileName">prescription.jpg</p>
+          <p class="analysis-file-size" id="analysisFileSize">0 KB</p>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-success" id="analysisFileCheck" style="display:none;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+
+      <div class="card analysis-stages-card">
+        <div id="analysisStages"></div>
+        <div class="progress-bar analysis-progress-bar"><div class="progress-bar-fill gradient-brand-success" id="analysisProgressBar"></div></div>
+      </div>
+
+      <div id="analysisResults" style="display:none;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== MEDICINE STORE ==================== -->
+<section id="store" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Medicine Store</h2>
+      <p class="section-desc">Browse medicines from verified pharmacies in Nanded.</p>
+    </div>
+
+    <div class="store-search-row">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="medicineSearch" class="input input-search" placeholder="Search medicines, manufacturers..." />
+        <button class="search-clear" id="searchClear" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="store-filters">
+      <div class="store-categories" id="storeCategories"></div>
+      <div class="store-sort">
+        <span class="store-sort-label">Sort:</span>
+        <select id="sortSelect" class="sort-select">
+          <option value="relevance">Relevance</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="store-count" id="storeCount">12 medicines found</p>
+    <div class="medicines-grid" id="medicinesGrid"></div>
+    <div class="store-empty" id="storeEmpty" style="display:none;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-gray-300"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <h3 class="store-empty-title">No medicines found</h3>
+      <p class="store-empty-desc">Try a different search or category.</p>
+    </div>
+  </div>
+</section>
+<!-- ==================== CART ==================== -->
+<section id="cart" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Shopping Cart</h2>
+      <p class="section-desc" id="cartItemCount">0 items in your cart</p>
+    </div>
+
+    <div id="cartEmpty" class="cart-empty">
+      <div class="cart-empty-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </div>
+      <h3 class="cart-empty-title">Your cart is empty</h3>
+      <p class="cart-empty-desc">Add medicines from the store to get started.</p>
+      <a href="#store" class="btn btn-primary btn-lg">Browse Store
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div id="cartContent" class="cart-layout" style="display:none;">
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-summary-wrap">
+        <div class="card cart-summary">
+          <h3 class="cart-summary-title">Order Summary</h3>
+          <div class="cart-coupon-area" id="couponArea">
+            <label class="label">Coupon Code</label>
+            <div class="coupon-input-row">
+              <input type="text" id="couponInput" class="input input-uppercase" placeholder="Try MEDISWIFT10" />
+              <button class="btn btn-secondary" id="applyCouponBtn">Apply</button>
+            </div>
+            <p class="coupon-error" id="couponError" style="display:none;"></p>
+          </div>
+          <div class="cart-summary-rows" id="couponApplied" style="display:none;"></div>
+          <div class="cart-summary-breakdown" id="cartBreakdown"></div>
+          <div class="cart-summary-total">
+            <span class="cart-total-label">Total</span>
+            <span class="cart-total-value" id="cartTotal">₹0</span>
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" id="checkoutBtn">Proceed to Checkout
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+          <div class="cart-summary-trust">
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Secure</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Fast Delivery</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHECKOUT ==================== -->
+<section id="checkout" class="section" style="display:none;">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Checkout</h2>
+      <p class="section-desc">Complete your order and get medicines delivered fast.</p>
+    </div>
+
+    <div id="checkoutSuccess" style="display:none;">
+      <div class="checkout-success">
+        <div class="checkout-success-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12h2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6h2"/><path d="M12 2v10"/><path d="m4.93 4.93 14.14 14.14"/></svg>
+        </div>
+        <h3 class="checkout-success-title">Order Placed!</h3>
+        <p class="checkout-success-desc">Your order has been confirmed and is being processed.</p>
+        <div class="card checkout-success-card">
+          <div class="checkout-success-row border-b"><span class="text-gray-500">Order ID</span><span class="font-bold" id="successOrderId"></span></div>
+          <div class="checkout-success-row border-b"><span class="text-gray-500">Payment Method</span><span class="font-semibold" id="successPayment"></span></div>
+          <div class="checkout-success-row"><span class="text-gray-500">Estimated Delivery</span><span class="font-bold text-brand">15 minutes</span></div>
+        </div>
+        <div class="checkout-success-actions">
+          <a href="#tracking" class="btn btn-primary btn-lg" id="trackOrderBtn">Track Order
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="#store" class="btn btn-secondary btn-lg">Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+
+    <form id="checkoutForm" class="checkout-layout">
+      <div class="checkout-left">
+        <div class="card checkout-section-card">
+          <h3 class="checkout-section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Delivery Address
+          </h3>
+          <div class="checkout-form-grid">
+            <div class="form-col-span-2">
+              <label class="label">Street address *</label>
+              <input type="text" id="checkoutAddress" class="input" placeholder="House no, building, street" />
+            </div>
+            <div>
+              <label class="label">City *</label>
+              <input type="text" id="checkoutCity" class="input" value="Nanded" />
+            </div>
+            <div>
+              <label class="label">Pincode *</label>
+              <input type="text" id="checkoutPincode" class="input" placeholder="431601" maxlength="6" />
+            </div>
+            <div class="form-col-span-2">
+              <label class="label">Phone number *</label>
+              <div class="phone-input-wrap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="phone-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <input type="tel" id="checkoutPhone" class="input input-phone" placeholder="9876543210" maxlength="10" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card checkout-section-card">
+          <h3 class="checkout-section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Payment Method
+          </h3>
+          <div id="paymentOptions"></div>
+        </div>
+      </div>
+
+      <div class="checkout-right">
+        <div class="card checkout-summary-card">
+          <h3 class="cart-summary-title">Order Summary</h3>
+          <div class="checkout-items-list" id="checkoutItems"></div>
+          <div class="cart-summary-breakdown" id="checkoutBreakdown"></div>
+          <div class="cart-summary-total">
+            <span class="cart-total-label">Total</span>
+            <span class="cart-total-value" id="checkoutTotal">₹0</span>
+          </div>
+          <div class="checkout-error" id="checkoutError" style="display:none;"></div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="placeOrderBtn">Place Order
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+          <p class="checkout-secure-text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Your payment is secured with 256-bit encryption
+          </p>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ==================== ORDER TRACKING ==================== -->
+<section id="tracking" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Track Your Order</h2>
+      <p class="section-desc">Real-time tracking from pharmacy to your doorstep.</p>
+    </div>
+    <div class="tracking-order-selector" id="orderSelector"></div>
+    <div class="tracking-layout">
+      <div class="card tracking-timeline-card">
+        <div class="tracking-header">
+          <div>
+            <h3 class="tracking-order-id" id="trackingOrderId"></h3>
+            <p class="tracking-order-info" id="trackingOrderInfo"></p>
+          </div>
+          <span class="badge" id="trackingBadge"></span>
+        </div>
+        <div id="trackingEtaBanner"></div>
+        <div class="tracking-timeline" id="trackingTimeline"></div>
+      </div>
+      <div class="tracking-sidebar" id="trackingSidebar"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== AI ASSISTANT ==================== -->
+<section id="assistant" class="section">
+  <div class="container">
+    <div class="assistant-header reveal">
+      <div class="assistant-header-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+      </div>
+      <div>
+        <h2 class="section-title">AI Medicine Assistant</h2>
+        <p class="section-desc">Ask about medicines, dosage, precautions, and side effects.</p>
+      </div>
+    </div>
+
+    <div class="assistant-disclaimer reveal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <p><strong>Disclaimer:</strong> This AI assistant provides general medicine information for educational purposes only. It does <strong>not</strong> diagnose diseases or prescribe medicines. Always consult a qualified doctor before taking any medication.</p>
+    </div>
+
+    <div class="assistant-layout">
+      <div class="card assistant-chat-card">
+        <div class="assistant-chat-header">
+          <div class="assistant-chat-bot">
+            <div class="assistant-bot-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+            </div>
+            <span class="assistant-online-dot"></span>
+          </div>
+          <div>
+            <p class="assistant-chat-name">MediSwift Assistant</p>
+            <p class="assistant-chat-status">Online</p>
+          </div>
+          <button class="btn btn-ghost assistant-clear-btn" id="clearChatBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Clear
+          </button>
+        </div>
+        <div class="assistant-messages" id="assistantMessages"></div>
+        <div class="assistant-input-area">
+          <form id="assistantForm" class="assistant-input-form">
+            <input type="text" id="assistantInput" class="input" placeholder="Ask about a medicine..." />
+            <button type="submit" class="btn btn-primary assistant-send-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="assistant-sidebar">
+        <div class="card assistant-sidebar-card">
+          <h3 class="assistant-sidebar-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+            Suggested Questions
+          </h3>
+          <div id="assistantSuggestions"></div>
+        </div>
+        <div class="card assistant-sidebar-card">
+          <h3 class="assistant-sidebar-title">What I can help with</h3>
+          <ul class="assistant-help-list" id="assistantHelpList"></ul>
+          <div class="assistant-cannot-do">
+            <strong>Cannot do:</strong> Diagnose diseases, prescribe medicines, or replace a doctor's advice.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== DOCTOR CONSULTATION ==================== -->
+<section id="doctors" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Doctor Consultation</h2>
+      <p class="section-desc">Consult verified doctors online — anytime, from the comfort of your home.</p>
+    </div>
+
+    <div class="doctors-search-row">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="doctorSearch" class="input input-search" placeholder="Search doctors by name or specialization..." />
+        <button class="search-clear" id="doctorSearchClear" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="doctors-filter">
+        <button class="filter-btn active" id="filterAllBtn">All Doctors</button>
+        <button class="filter-btn" id="filterAvailableBtn">Available Now</button>
+      </div>
+    </div>
+
+    <div class="doctors-grid" id="doctorsGrid"></div>
+    <div class="store-empty" id="doctorsEmpty" style="display:none;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-gray-300"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <h3 class="store-empty-title">No doctors found</h3>
+      <p class="store-empty-desc">Try a different search.</p>
+    </div>
+
+    <div class="doctors-trust-grid">
+      <div class="card doctors-trust-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <p class="upload-info-title">Verified Doctors</p>
+        <p class="upload-info-desc">Every doctor is GMC/MCI certified and background-checked.</p>
+      </div>
+      <div class="card doctors-trust-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        <p class="upload-info-title">Video Consultation</p>
+        <p class="upload-info-desc">Talk face-to-face with doctors from anywhere in Nanded.</p>
+      </div>
+      <div class="card doctors-trust-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <p class="upload-info-title">Flexible Slots</p>
+        <p class="upload-info-desc">Book a slot that fits your schedule — even same-day.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TESTIMONIALS ==================== -->
+<section id="testimonials" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Loved by customers in Nanded</h2>
+      <p class="section-desc">Real stories from people who use MediSwift AI.</p>
+    </div>
+    <div class="testimonials-grid" id="testimonialsGrid"></div>
+  </div>
+</section>
+<!-- ==================== FINAL CTA ==================== -->
+<section id="finalCta" class="section">
+  <div class="container">
+    <div class="final-cta-card reveal">
+      <div class="final-cta-blob-1"></div>
+      <div class="final-cta-blob-2"></div>
+      <div class="final-cta-content">
+        <h2 class="final-cta-title">Ready to order your medicines the smart way?</h2>
+        <p class="final-cta-desc">Join thousands of happy customers in Nanded. Upload your prescription and get started in seconds.</p>
+        <div class="final-cta-actions">
+          <a href="#upload" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Prescription
+          </a>
+          <a href="#" id="finalRegisterBtn" class="btn btn-secondary btn-lg">Create Account
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== AI ASSISTANT CTA ==================== -->
+<section class="section" style="padding-top:0;padding-bottom:3rem;">
+  <div class="container">
+    <div class="ai-cta-card reveal">
+      <div class="ai-cta-glow"></div>
+      <div class="ai-cta-content">
+        <div class="ai-cta-left">
+          <div class="ai-cta-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+            AI Medicine Assistant
+          </div>
+          <h2 class="ai-cta-title">Have questions about your medicines?</h2>
+          <p class="ai-cta-desc">Ask our AI assistant about uses, dosage, precautions, and side effects — anytime.</p>
+        </div>
+        <a href="#assistant" class="btn btn-primary btn-lg ai-cta-btn">Ask the Assistant
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-bg-grid"></div>
+  <div class="container footer-container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#hero" class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+              <path d="M12 2a3 3 0 0 0-3 3v1H7a3 3 0 0 0 0 6h2v2H7a3 3 0 0 0 0 6h2v1a3 3 0 0 0 6 0v-1h2a3 3 0 0 0 0-6h-2v-2h2a3 3 0 0 0 0-6h-2V5a3 3 0 0 0-3-3Z" fill="currentColor" opacity="0.95"/>
+              <rect x="9.5" y="10.5" width="5" height="3" rx="1.5" fill="#16A34A"/>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <span class="logo-name">MediSwift</span>
+            <span class="logo-sub">Nanded • 15-min delivery</span>
+          </div>
+        </a>
+        <p class="footer-desc">AI-powered medicine delivery platform connecting patients with verified pharmacies in Nanded. Fast, secure, and trusted.</p>
+        <div class="footer-contact">
+          <div class="footer-contact-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Nanded, Maharashtra, India</div>
+          <div class="footer-contact-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +91 98765 43210</div>
+          <div class="footer-contact-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> support@mediswift.ai</div>
+        </div>
+        <div class="footer-social">
+          <a href="#" class="footer-social-link" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" class="footer-social-link" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+          <a href="#" class="footer-social-link" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="#" class="footer-social-link" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Company</h4>
+        <ul class="footer-links"><li><a href="#hero">About</a></li><li><a href="#hero">Careers</a></li><li><a href="#hero">Contact</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Legal</h4>
+        <ul class="footer-links"><li><a href="#hero">Privacy Policy</a></li><li><a href="#hero">Terms of Service</a></li><li><a href="#hero">Refund Policy</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Services</h4>
+        <ul class="footer-links"><li><a href="#store">Medicine Store</a></li><li><a href="#doctors">Doctor Consultation</a></li><li><a href="#assistant">AI Assistant</a></li><li><a href="#upload">Upload Prescription</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2026 MediSwift AI. All rights reserved. Made in Nanded, India.</p>
+      <div class="footer-badges">
+        <span class="footer-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 256-bit Encrypted</span>
+        <span class="footer-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15-min Delivery</span>
+      </div>
+    </div>
+    <p class="footer-disclaimer">Disclaimer: MediSwift AI provides medicine information for educational purposes only and does not diagnose, treat, or prescribe. Always consult a qualified healthcare professional before taking any medication.</p>
+  </div>
+</footer>
+
+<!-- ==================== LOGIN MODAL ==================== -->
+<div class="modal-overlay" id="loginModal" style="display:none;">
+  <div class="modal card">
+    <button class="modal-close" data-modal="loginModal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-header">
+      <div class="modal-logo">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+          <path d="M12 2a3 3 0 0 0-3 3v1H7a3 3 0 0 0 0 6h2v2H7a3 3 0 0 0 0 6h2v1a3 3 0 0 0 6 0v-1h2a3 3 0 0 0 0-6h-2v-2h2a3 3 0 0 0 0-6h-2V5a3 3 0 0 0-3-3Z" fill="currentColor" opacity="0.95"/>
+          <rect x="9.5" y="10.5" width="5" height="3" rx="1.5" fill="#16A34A"/>
+        </svg>
+      </div>
+      <h2 class="modal-title">Welcome back</h2>
+      <p class="modal-subtitle">Login to your MediSwift AI account</p>
+    </div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="label">Email</label>
+        <input type="email" id="loginEmail" class="input" placeholder="you@email.com" required />
+      </div>
+      <div class="form-group">
+        <label class="label">Phone <span style="font-weight:400;color:var(--gray-400)">(optional)</span></label>
+        <input type="tel" id="loginPhone" class="input" placeholder="9876543210" />
+      </div>
+      <div class="form-group">
+        <label class="label">Password</label>
+        <input type="password" id="loginPassword" class="input" placeholder="••••••••" required />
+      </div>
+      <div class="modal-form-error" id="loginFormError" style="display:none;"></div>
+      <button type="submit" class="btn btn-primary btn-block btn-lg">Login</button>
+    </form>
+    <p class="modal-footer-text">Don't have an account? <a href="#" data-modal-open="registerModal" data-modal-close="loginModal">Sign up</a></p>
+  </div>
+</div>
+
+<!-- ==================== REGISTER MODAL ==================== -->
+<div class="modal-overlay" id="registerModal" style="display:none;">
+  <div class="modal card">
+    <button class="modal-close" data-modal="registerModal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-header">
+      <div class="modal-logo">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+          <path d="M12 2a3 3 0 0 0-3 3v1H7a3 3 0 0 0 0 6h2v2H7a3 3 0 0 0 0 6h2v1a3 3 0 0 0 6 0v-1h2a3 3 0 0 0 0-6h-2v-2h2a3 3 0 0 0 0-6h-2V5a3 3 0 0 0-3-3Z" fill="currentColor" opacity="0.95"/>
+          <rect x="9.5" y="10.5" width="5" height="3" rx="1.5" fill="#16A34A"/>
+        </svg>
+      </div>
+      <h2 class="modal-title">Create account</h2>
+      <p class="modal-subtitle">Join MediSwift AI — fast medicine delivery in Nanded</p>
+    </div>
+    <form id="registerForm">
+      <div class="form-group">
+        <label class="label">Full Name *</label>
+        <input type="text" id="registerName" name="name" class="input" placeholder="Your full name" required />
+      </div>
+      <div class="form-group">
+        <label class="label">Email *</label>
+        <input type="email" id="registerEmail" name="email" class="input" placeholder="you@email.com" required />
+      </div>
+      <div class="form-group">
+        <label class="label">Phone Number *</label>
+        <input type="tel" id="registerPhone" name="phone" class="input" placeholder="9876543210" inputmode="numeric" maxlength="10" required />
+      </div>
+      <div class="form-group">
+        <label class="label">Delivery Address *</label>
+        <input type="text" id="registerAddress" name="address" class="input" placeholder="House no., building, street, area" maxlength="180" required />
+      </div>
+      <div class="form-group">
+        <label class="label">City *</label>
+        <input type="text" id="registerCity" name="city" class="input" value="Nanded" maxlength="80" required />
+      </div>
+      <div class="form-group">
+        <label class="label">Pincode *</label>
+        <input type="text" id="registerPincode" name="pincode" class="input" placeholder="431601" inputmode="numeric" maxlength="6" required />
+      </div>
+      <div class="form-group">
+        <label class="label">Password *</label>
+        <input type="password" id="registerPassword" name="password" class="input" placeholder="Min 6 characters" minlength="6" required />
+      </div>
+      <div class="modal-form-error" id="registerFormError" style="display:none;"></div>
+      <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account</button>
+    </form>
+    <p class="modal-footer-text">Already have an account? <a href="#" data-modal-open="loginModal" data-modal-close="registerModal">Login</a></p>
+  </div>
+</div>
+
+<!-- ==================== ACCOUNT CENTER ==================== -->
+<div class="modal-overlay" id="profileModal" style="display:none;">
+  <div class="modal card profile-modal-card">
+    <button class="modal-close" id="profileCloseBtn" type="button">×</button>
+    <div class="profile-header"><div class="profile-avatar-large" id="profileAvatarLarge">U</div><div><h2 class="modal-title" id="profileHeading">My Profile</h2><p class="modal-subtitle" id="profileMemberSince">Manage your MediSwift account</p></div></div>
+    <div class="profile-tabs"><button class="profile-tab active" data-profile-tab="details" type="button">Profile</button><button class="profile-tab" data-profile-tab="appointments" type="button">Appointments</button><button class="profile-tab" data-profile-tab="orders" type="button">Orders</button><button class="profile-tab" data-profile-tab="security" type="button">Security</button></div>
+    <div class="profile-pane active" id="profilePaneDetails"><form id="profileForm" class="profile-form-grid">
+      <div class="form-group profile-span-2"><label class="label">Full Name</label><input class="input" id="profileName" required></div>
+      <div class="form-group"><label class="label">Email</label><input class="input" id="profileEmail" type="email" required></div><div class="form-group"><label class="label">Phone</label><input class="input" id="profilePhone" type="tel"></div>
+      <div class="form-group profile-span-2"><label class="label">Address</label><input class="input" id="profileAddress" placeholder="House no., street, area"></div><div class="form-group"><label class="label">City</label><input class="input" id="profileCity"></div><div class="form-group"><label class="label">Pincode</label><input class="input" id="profilePincode"></div>
+      <div class="modal-form-error profile-span-2" id="profileFormError" style="display:none"></div><div class="profile-success profile-span-2" id="profileFormSuccess" style="display:none"></div><div class="profile-actions profile-span-2"><button class="btn btn-primary" type="submit">Save Changes</button><button class="btn btn-secondary" type="button" id="profileLogoutBtn">Logout</button></div>
+    </form></div>
+    <div class="profile-pane" id="profilePaneAppointments"><div id="profileAppointments" class="profile-list"></div></div>
+    <div class="profile-pane" id="profilePaneOrders"><div id="profileOrders" class="profile-list"></div></div>
+    <div class="profile-pane" id="profilePaneSecurity"><form id="passwordForm"><div class="form-group"><label class="label">Current Password</label><input class="input" id="currentPassword" type="password" required></div><div class="form-group"><label class="label">New Password</label><input class="input" id="newPassword" type="password" minlength="6" required></div><div class="form-group"><label class="label">Confirm New Password</label><input class="input" id="confirmPassword" type="password" minlength="6" required></div><div class="modal-form-error" id="passwordFormError" style="display:none"></div><div class="profile-success" id="passwordFormSuccess" style="display:none"></div><button class="btn btn-primary" type="submit">Change Password</button></form></div>
+  </div>
+</div>
+<div class="modal-overlay" id="appointmentModal" style="display:none;"><div class="modal card appointment-modal-card"><button class="modal-close" id="appointmentCloseBtn" type="button">×</button><div class="modal-header"><h2 class="modal-title">Book Appointment</h2><p class="modal-subtitle" id="appointmentDoctorName"></p></div><form id="appointmentForm"><input id="appointmentDoctorId" type="hidden"><div class="profile-form-grid"><div class="form-group"><label class="label">Date</label><input class="input" id="appointmentDate" type="date" required></div><div class="form-group"><label class="label">Time</label><input class="input" id="appointmentTime" type="time" required></div><div class="form-group profile-span-2"><label class="label">Reason (optional)</label><textarea class="input appointment-reason" id="appointmentReason" rows="3"></textarea></div></div><div class="modal-form-error" id="appointmentFormError" style="display:none"></div><div class="profile-success" id="appointmentFormSuccess" style="display:none"></div><button class="btn btn-primary btn-block btn-lg" type="submit">Confirm Appointment</button></form></div></div>
+
+<!-- ==================== FLOATING AI ASSISTANT ==================== -->
+<button class="fab-ai" id="fabAi" aria-label="AI Assistant">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+  <span class="fab-ai-tooltip">AI Assistant</span>
+</button>
+
+<!-- ==================== FLOATING EMERGENCY ==================== -->
+<button class="fab-emergency" id="fabEmergency" aria-label="Emergency Ambulance">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+  <span class="fab-emergency-tooltip">Emergency Ambulance</span>
+  <span class="fab-emergency-pulse"></span>
+</button>
+
+<!-- ==================== FLOATING CHAT PANEL ==================== -->
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-panel-header">
+    <div class="chat-panel-bot">
+      <div class="chat-panel-bot-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+      </div>
+      <span class="chat-panel-online-dot"></span>
+    </div>
+    <div>
+      <p class="chat-panel-name">MediSwift Assistant</p>
+      <p class="chat-panel-status">Online</p>
+    </div>
+    <button class="chat-panel-close" id="chatPanelClose">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="chat-panel-messages" id="chatPanelMessages"></div>
+  <div class="chat-panel-emergency">
+    <div class="chat-panel-emergency-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Emergency Contacts
+    </div>
+    <div class="chat-panel-emergency-btns">
+      <a href="tel:102" class="chat-emergency-btn ambulance">Ambulance<br><span>102</span></a>
+      <a href="tel:100" class="chat-emergency-btn police">Police<br><span>100</span></a>
+      <a href="tel:101" class="chat-emergency-btn fire">Fire<br><span>101</span></a>
+    </div>
+  </div>
+  <div class="chat-panel-suggestions" id="chatPanelSuggestions"></div>
+  <form class="chat-panel-input-form" id="chatPanelForm">
+    <input type="text" id="chatPanelInput" class="input" placeholder="Ask about a medicine..." />
+    <button type="submit" class="btn btn-primary chat-panel-send">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </form>
+</div>
+
+<!-- ==================== EMERGENCY CONFIRM MODAL ==================== -->
+<div class="modal-overlay" id="emergencyModal" style="display:none;">
+  <div class="modal card emergency-modal">
+    <div class="emergency-modal-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </div>
+    <h2 class="emergency-modal-title">Call 102 Ambulance?</h2>
+    <p class="emergency-modal-desc">This will open your device dialer to call the emergency ambulance service.</p>
+    <div class="emergency-modal-actions">
+      <button class="btn btn-secondary btn-lg" id="emergencyCancel">Cancel</button>
+      <a href="tel:102" class="btn btn-lg emergency-call-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Call 102
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCROLL TO TOP ==================== -->
+<button class="scroll-to-top" id="scrollTopBtn" aria-label="Scroll to top">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+</button>
+
+<script src="/mediswift-ui.js"></script>
+<script src="/multipage.js"></script>
+<script src="/script.js"></script>
+<script src="/fullstack.js"></script>
+<script src="/enhancements.js"></script>
+</body>
+</html>
